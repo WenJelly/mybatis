@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mybatis.mapper.SQLMapper">
+
+<!--    List<User> getUserByLike(@Param("user_name") String user_name);-->
+    <!--         模糊查询不能用#{}       -->
+    <!--         select * from user where user_name like '%#{user_name}%'     -->
+    <select id="getUserByLike" resultType="User">
+         select * from user where user_name like "%"#{user_name}"%";
+    </select>
+<!--    模糊查询的3种方式-->
+<!--    select * from user where user_name like "%"#{user_name}"%";-->
+<!--    select * from user where user_name like '%${user_name}%';-->
+<!--    select * from user where user_name like concat('%',#{user_name},'%')-->
+
+<!--    int deleteMore(@Param("ids") String ids);-->
+<!--    #{}会自动加单引号,所以在批量删除中不能使用#{}-->
+    <delete id="deleteMore">
+        delete from user where user_id in (${ids})
+    </delete>
+
+<!--    List<User> getUserByTableName(@Param("tableName") String tableName);-->
+    <!--    #{}会自动加单引号,所以在这里不能使用#{}-->
+    <select id="getUserByTableName" resultType="User">
+        select * from ${tableName}
+    </select>
+
+<!--    void insertUser(User user);-->
+<!--    useGeneratedKeys:设置当前标签中的sql使用了自增的主键-->
+<!--    keyProperty:将自增的主键的值赋值给传输到映射文件中参数的某个属性-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="user_id">
+        insert into user values(null,#{user_name},#{user_pwd});
+    </insert>
+</mapper>

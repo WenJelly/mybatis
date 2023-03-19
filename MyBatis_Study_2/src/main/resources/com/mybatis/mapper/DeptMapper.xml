@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mybatis.mapper.DeptMapper">
+
+
+<!--    Dept getEmpAndDeptByStepTwo(@Param("did") Integer did);-->
+    <resultMap id="EmpAndDeptByStepTwoMap" type="dept">
+        <id property="did" column="did"></id>
+        <id property="deptName" column="dept_name"></id>
+    </resultMap>
+
+    <select id="getEmpAndDeptByStepTwo" resultMap="EmpAndDeptByStepTwoMap">
+        select * from t_dept where did = #{did};
+    </select>
+
+<!--    Dept getDeptAndEmp(@Param("did") Integer did);-->
+    
+    <resultMap id="deptAndEmpResultMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+<!--
+            collection:处理一对多关系标签
+            property处理该实体类里面的属性
+            ofType:表示该属性所对应的集合中存储数据时类型
+-->
+        <collection property="emp" ofType="Emp">
+            <id property="eid" column="eid"></id>
+            <result property="empName" column="emp_name"></result>
+            <result property="age" column="age"></result>
+            <result property="sex" column="sex"></result>
+            <result property="email" column="email"></result>
+        </collection>
+    </resultMap>
+    
+    <select id="getDeptAndEmp" resultMap="deptAndEmpResultMap">
+        select * from t_dept left join t_emp on t_dept.did = t_emp.did where t_dept.did = #{did};
+    </select>
+
+
+<!--
+        分步查询
+-->
+<!--    Dept getDeptAndEmpByShepOne(@Param("did") Integer did);-->
+    <resultMap id="deptAndEmpByStepMap" type="Dept">
+        <id property="did" column="did"></id>
+        <result property="deptName" column="dept_name"></result>
+        <collection property="emp"
+                    select="com.mybatis.mapper.EmpMapper.getDeptAndEmpByStepTow"
+                    column="did">
+        </collection>
+    </resultMap>
+
+    <select id="getDeptAndEmpByShepOne" resultMap="deptAndEmpByStepMap">
+        select * from t_dept where did = #{did};
+    </select>
+
+</mapper>

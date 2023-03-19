@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.mybatis.mapper.ParameterMapper">
+
+    <!-- List<User> getAllUser();   -->
+    <select id="getAllUser" resultType="User">
+        select * from user;
+    </select>
+
+<!--    User getUserByUsername(String user_name);-->
+    <select id="getUserByUsername" resultType="User">
+        select * from user where user_name = #{user_name};
+    </select>
+
+<!--    User checkLogin(String user_name,String user_password);-->
+    <select id="checkLogin" resultType="User">
+--         select * from user where user_name = #{arg0} and user_pwd = #{arg1};
+--         或者
+            select * from user where user_name = #{param1} and user_pwd = #{param2};
+--         混淆用也可以
+    </select>
+<!--    User checkLoginByMap(Map<String,Object> map);-->
+    <select id="checkLoginByMap" resultType="User">
+        select * from user where user_name = #{user_name} and user_pwd = #{user_pwd};
+    </select>
+
+<!--    int insertUser(User user);-->
+    <insert id="insertUser">
+        insert into user values(null,#{user_name},#{user_pwd});
+    </insert>
+
+<!--    User checkLoginByParam(@Param("user_name") String user_name, @Param("user_pwd") String user_pwd);-->
+    <select id="checkLoginByParam" resultType="User">
+        select * from user where user_name = #{user_name} and user_pwd = #{user_pwd};
+    </select>
+</mapper>
